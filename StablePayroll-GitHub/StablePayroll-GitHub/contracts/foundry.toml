@@ -1,0 +1,12 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+
+[rpc_endpoints]
+arc_testnet = "${ARC_TESTNET_RPC_URL}"
+
+[etherscan]
+# Arc testnet explorer verification is not yet supported by forge verify-contract.
+# Verify manually at https://testnet.arcscan.app if needed.

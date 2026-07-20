@@ -1,0 +1,12 @@
+[
+  {
+    "onchainId": 0,
+    "walletId": "REPLACE_WITH_CIRCLE_WALLET_ID",
+    "assetId": "REPLACE_WITH_ARC_USDC_TOKEN_ID",
+    "amountUsdc": 250,
+    "fiatCurrency": "NGN",
+    "institutionCode": "GTBINGLA",
+    "accountNumber": "0123456789",
+    "accountName": "Jane Doe"
+  }
+]

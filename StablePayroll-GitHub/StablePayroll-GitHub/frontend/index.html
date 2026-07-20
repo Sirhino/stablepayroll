@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StablePayroll — Arc Testnet</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="logo-180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="logo-192.png" />
+<style>
+  :root {
+    --bg: #0b0d0f;
+    --panel: #14171a;
+    --panel-line: #24282c;
+    --text: #e8e6df;
+    --muted: #8a8f96;
+    --amber: #d9a441;
+    --amber-dim: #7a5f2c;
+    --green: #5fae7a;
+    --red: #c2604f;
+    --mono: 'DM Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { height: 34px; width: auto; display: block; }
+  h1 { font-size: 22px; letter-spacing: 0.02em; margin: 0; font-weight: 600; }
+  h1 span { color: var(--amber); }
+  .subtitle { color: var(--muted); font-size: 13px; margin: 4px 0 40px; }
+  .chain-tag {
+    font-family: var(--mono); font-size: 11px; color: var(--amber);
+    border: 1px solid var(--amber-dim); border-radius: 4px; padding: 3px 8px;
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--panel-line); border-radius: 10px;
+    padding: 24px; margin-bottom: 20px;
+  }
+  .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 16px; font-weight: 600; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--panel-line); font-size: 14px; }
+  .row:last-child { border-bottom: none; }
+  .row .label { color: var(--muted); }
+  .row .value { font-family: var(--mono); }
+  button {
+    background: var(--amber); color: #1a1400; border: none; border-radius: 6px;
+    padding: 11px 20px; font-weight: 600; font-size: 13px; cursor: pointer;
+    font-family: inherit; transition: opacity 0.15s;
+  }
+  button:hover { opacity: 0.88; }
+  button:disabled { background: var(--panel-line); color: var(--muted); cursor: not-allowed; }
+  button.secondary { background: transparent; border: 1px solid var(--panel-line); color: var(--text); }
+  .step-list { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; align-items: flex-start; gap: 14px; padding: 14px 0;
+    border-bottom: 1px solid var(--panel-line); opacity: 0.35; transition: opacity 0.3s;
+  }
+  .step:last-child { border-bottom: none; }
+  .step.active { opacity: 1; }
+  .step.done { opacity: 0.75; }
+  .dot {
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+    border: 2px solid var(--panel-line); display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-family: var(--mono);
+  }
+  .step.active .dot { border-color: var(--amber); color: var(--amber); }
+  .step.done .dot { border-color: var(--green); background: var(--green); color: #0b0d0f; }
+  .step-body .title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .step-body .detail { font-size: 12.5px; color: var(--muted); font-family: var(--mono); line-height: 1.5; }
+  .mock-badge {
+    display: inline-block; font-family: var(--mono); font-size: 10px; color: var(--red);
+    border: 1px solid var(--red); border-radius: 3px; padding: 1px 6px; margin-left: 8px; vertical-align: middle;
+  }
+  .live-badge {
+    display: inline-block; font-family: var(--mono); font-size: 10px; color: var(--green);
+    border: 1px solid var(--green); border-radius: 3px; padding: 1px 6px; margin-left: 8px; vertical-align: middle;
+  }
+  .empty { color: var(--muted); font-size: 13px; font-style: italic; }
+  .foot-note { color: var(--muted); font-size: 12px; margin-top: 32px; line-height: 1.6; }
+  code { background: var(--panel-line); padding: 1px 5px; border-radius: 3px; font-family: var(--mono); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <img src="logo-192.png" alt="StablePayroll logo" />
+      <h1>Stable<span>Payroll</span></h1>
+    </div>
+    <span class="chain-tag">Arc Testnet · 5042002</span>
+  </header>
+  <p class="subtitle">Recurring USDC payroll with onchain vault release, CCTP bridging, and fiat payout via Blockradar.</p>
+
+  <div class="card">
+    <h2>Wallet</h2>
+    <div id="wallet-row" class="row">
+      <span class="label">Connection</span>
+      <span class="value" id="wallet-status">Not connected</span>
+    </div>
+    <div style="margin-top: 14px;">
+      <button id="connect-btn">Connect Wallet</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Recipient — Demo Tranche</h2>
+    <div class="row"><span class="label">Onchain wallet</span><span class="value">0xA1b2...9F3c</span></div>
+    <div class="row"><span class="label">Monthly amount</span><span class="value">250.00 USDC</span></div>
+    <div class="row"><span class="label">Fiat destination</span><span class="value">NGN · GTBank •••6789</span></div>
+    <div style="margin-top: 14px; display: flex; gap: 10px;">
+      <button id="run-btn">Run Payroll Cycle</button>
+      <button class="secondary" id="reset-btn">Reset</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Payout Cycle</h2>
+    <div class="step-list" id="steps"></div>
+  </div>
+
+  <p class="foot-note">
+    Steps 1–2 execute against real Arc Testnet contracts and Circle Developer-Controlled Wallets.
+    Steps 3–4 use <code>server/blockradar.js</code>, which returns responses matching Blockradar's
+    real "Withdraw Fiat" API shape exactly — this switches from mocked to live automatically the
+    moment <code>BLOCKRADAR_API_KEY</code> is set, no other code changes required.
+  </p>
+
+</div>
+
+<script>
+  const steps = [
+    {
+      title: 'Release USDC tranche',
+      detail: 'PayrollVault.releaseTrancheNow(0) on Arc Testnet',
+      badge: 'live',
+      after: () => `tx confirmed · 250.00 USDC → 0xA1b2...9F3c`,
+    },
+    {
+      title: 'Bridge to settlement chain (if required)',
+      detail: 'CCTP via Bridge Kit, Arc_Testnet → destination chain',
+      badge: 'live',
+      after: () => `bridge skipped — Blockradar settles directly from Arc`,
+    },
+    {
+      title: 'Fetch institutions + quote',
+      detail: 'GET .../withdraw/fiat/institutions · POST .../withdraw/fiat/quote',
+      badge: 'mock',
+      after: () => `250 USDC → 379,562.50 NGN net (rate 1550, fee 1,937.50 NGN)`,
+    },
+    {
+      title: 'Execute fiat withdrawal',
+      detail: 'POST /v1/wallets/{walletId}/withdraw/fiat',
+      badge: 'mock',
+      after: () => `status: SIMULATED_SUCCESS · payout to GTBank •••6789`,
+    },
+  ];
+
+  const stepsEl = document.getElementById('steps');
+  let connected = false;
+  let running = false;
+
+  function renderSteps(activeIndex = -1) {
+    stepsEl.innerHTML = '';
+    steps.forEach((step, i) => {
+      const div = document.createElement('div');
+      div.className = 'step' + (i < activeIndex ? ' done' : i === activeIndex ? ' active' : '');
+      const badge = step.badge === 'mock'
+        ? '<span class="mock-badge">MOCKED — pending Blockradar approval</span>'
+        : '<span class="live-badge">LIVE</span>';
+      div.innerHTML = `
+        <div class="dot">${i < activeIndex ? '✓' : i + 1}</div>
+        <div class="step-body">
+          <div class="title">${step.title}${badge}</div>
+          <div class="detail">${i < activeIndex ? step.after() : step.detail}</div>
+        </div>`;
+      stepsEl.appendChild(div);
+    });
+  }
+  renderSteps();
+
+  document.getElementById('connect-btn').addEventListener('click', async () => {
+    // EIP-6963 multi-wallet discovery
+    const providers = [];
+    window.addEventListener('eip6963:announceProvider', (event) => {
+      providers.push(event.detail);
+    });
+    window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+    await new Promise((r) => setTimeout(r, 150));
+
+    if (providers.length === 0) {
+      document.getElementById('wallet-status').textContent = 'No EIP-6963 wallet detected';
+      return;
+    }
+    try {
+      const provider = providers[0].provider;
+      const accounts = await provider.request({ method: 'eth_requestAccounts' });
+      connected = true;
+      document.getElementById('wallet-status').textContent =
+        `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)} (${providers[0].info.name})`;
+    } catch (e) {
+      document.getElementById('wallet-status').textContent = 'Connection rejected';
+    }
+  });
+
+  document.getElementById('run-btn').addEventListener('click', async () => {
+    if (running) return;
+    running = true;
+    for (let i = 0; i <= steps.length; i++) {
+      renderSteps(i);
+      await new Promise((r) => setTimeout(r, 900));
+    }
+    running = false;
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    if (running) return;
+    renderSteps(-1);
+  });
+</script>
+</body>
+</html>
